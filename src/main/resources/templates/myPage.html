@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyPage - 호텔 예약</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff;
+      padding: 2rem;
+      color: #333;
+      color: #565656;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
+    }
+    .nav-links a {
+      margin-left: 1rem;
+      text-decoration: none;
+      color: #333;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .welcome {
+      margin-bottom: 2rem;
+    }
+    .reservation-card {
+      border: 1px solid #ddd;
+      border-radius: 1rem;
+      display: flex;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .reservation-card img {
+      width: 200px;
+      object-fit: cover;
+    }
+    .reservation-info {
+      padding: 1rem;
+      flex: 1;
+    }
+    .reservation-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .reservation-buttons button {
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      cursor: pointer;
+      border-radius: 0.5rem;
+    }
+    form {
+      display: grid;
+      gap: 1rem;
+    }
+    form label {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.9rem;
+    }
+    form input, form textarea {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+    form .full-width {
+      grid-column: 5rem;
+    }
+    form button {
+      grid-column: 1 / -1;
+      padding: 0.75rem;
+      background-color: #007bff;
+      color: #333;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid #ccc;
+      font-size: 0.9rem;
+      text-align: center;
+      color: #888;
+    }
+    
+    .divider {
+      border-top: 1px solid #ccc;
+      margin: 2rem 0;
+    }
+    .horizontal-group {
+      display: flex;
+      gap: 1rem;
+      grid-column: 1 / -1; /* grid에서도 한 줄 차지하게 */
+    }
+
+    .horizontal-group label {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .half-group {
+      width: 50%;
+    }
+
+    .half-group label {
+      display: flex;
+      flex-direction: column;
+      }
+   
+    .sb {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .hello {
+      margin-left: 2.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">🔴 Site Name</div>
+    <div class="nav-links">
+    <!--  <a href="#">NickName님</a> -->
+		<span sec:authorize="isAuthenticated()">
+		<span th:text="${#authentication.name}"></span>님
+		</span>
+		<a sec:authorize="isAuthenticated()" th:href="@{/myPage}">MyPage</a>
+		<a sec:authorize="isAuthenticated()" th:href="@{/savedPage}">찜 목록</a>
+	    <a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
+      <!-- <a href="#">MyPage</a> 
+      <a href="#">로그아웃</a>-->
+    </div>
+  </header>
+
+  <section class="welcome">
+    <h1>MyPage</h1>
+    <div class="hello">
+      <h4>		<span sec:authorize="isAuthenticated()">
+				<span th:text="${#authentication.name}"></span>
+				</span>님, 환영합니다.</p>
+    </div>
+  </section>
+  <div class="divider"></div>
+  
+  <h2>나의 예약현황</h2>
+  <div class="reservation-card">
+    <img src="https://source.unsplash.com/400x300/?hotel,pool" alt="부산 시그니엘 호텔" />
+    <div class="reservation-info">
+      <div class="sb">
+        <h3>시그니엘 부산</h3>
+        <p style="text-align: right">예약자 성함 : OOO</p>
+      </div>
+      <div class="sb">
+        <p style="margin-bottom: 2rem">해운대</p>
+        <p>객실 : 트윈베드 오션뷰 (2인)</p>
+      </div>
+      <div class="sb">
+        <p>예약일자</p>
+        <p style="text-align: right">체크인 시간 : 14:00</p>
+      </div>
+      <div class="sb">
+        <p>5월 1일 ~ 5월 7일</p>
+        <p style="text-align: right">체크아웃 시간 : 10:00</p>
+      </div>
+ 
+    </div>
+  </div>
+  
+  <div class="reservation-buttons" >
+        <button>공유하기</button>
+        <button>결제내역</button>
+        <button>예약취소</button>
+  </div>
+  <div class="divider"></div>
+  <h2>회원정보</h2>
+  <br/>
+  <form th:action="@{/myPage}" th:object="${user}" method="post">
+    <div class="half-group">
+      <label>이름<input type="text" th:field="*{name}" /></label>
+    </div>
+    
+    <label>이메일<input type="email" th:field="*{email}" class="full-width" /></label>
+    
+    <div class="half-group">
+      <label>아이디<input type="text" th:field="*{loginID}" class="full-width" /></label>
+    </div>
+    
+    <div class="half-group">
+      <label>비밀번호<input type="password" th:field="*{loginPassword}" class="full-width" /></label>
+    </div>
+    
+    <div class="half-group">
+    <label>전화번호<input type="text" th:field="*{punNumber}" class="full-width" /></label>
+    </div>
+    
+    <div class="reservation-buttons">
+      <button type="submit">수정하기</button>
+    </div>
+  </form>
+<br/>
+<br/>
+<br/>
+<footer>
+    <div class="footer-top">
+      <div class="logo">Site Name</div>
+      <div class="footer-links">
+        <ul>
+          <li>Page 1</li>
+          <li>Page 2</li>
+          <li>Page 3</li>
+        </ul>
+        <ul>
+          <li>Topic A</li>
+          <li>Topic B</li>
+          <li>Topic C</li>
+        </ul>
+        <ul>
+          <li>Info 1</li>
+          <li>Info 2</li>
+          <li>Info 3</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

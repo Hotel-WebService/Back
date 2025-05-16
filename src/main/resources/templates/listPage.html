@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Site Name – 호텔 검색</title>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        header .user-nav a {
+            margin-left: 1rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        /* 검색 섹션 */
+        .search-section {
+            padding: 1.5rem 3rem;
+            background: #fff;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .search-item {
+            display: flex;
+            align-items: center;
+            padding: 0.03px 140px;
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            padding-left: 3rem;
+        }
+
+        .search-item i {
+            font-size: 1.2rem;
+            color: #666;
+            margin-right: 0.2rem;
+        }
+
+        .search-item .info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .search-item .title {
+            font-size: 0.7rem;
+            display: flex;
+        }
+
+        .search-item .value {
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .search-btn {
+            background: #007bff;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .popular-keywords {
+            margin-left: 1rem;
+            padding: 0.6rem 1rem;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            color: #007bff;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+          
+        .sort-section {
+  padding: 0.8rem 3rem;
+  background: #fff;
+}
+      
+      .sort-filter {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+}
+      
+      .sort-filter .label {
+  margin-right: 0.5rem;
+  color: #777;
+}
+      .sort-filter .value {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+      
+      .sort-filter .value i {
+  margin-left: 0.3rem;
+  font-size: 0.8rem;
+}
+      
+        /* 본문 영역 */
+        .main {
+            display: flex;
+            padding: 2rem;
+        }
+
+        /* 사이드바 필터 */
+        .sidebar {
+            width: 250px;
+            padding-right: 2rem;
+            border-right: 1px solid #eee;
+        }
+
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+
+        .filter-section h4 {
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .filter-section ul {
+            list-style: none;
+        }
+
+        .filter-section li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .filter-section input[type="checkbox"],
+        .filter-section input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        .price-range {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+        }
+
+        .price-range input[type="range"] {
+            width: 100%;
+        }
+
+        /* 결과 리스트 */
+        .content {
+            flex: 1;
+            padding-left: 2rem;
+        }
+
+        .hotel-card {
+          width: 800px;
+            height: 200px;
+            display: flex;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hotel-img {
+            width: 300px;
+            height: 200px;
+            background: #eee;
+        }
+
+        .hotel-info {
+            flex: 1;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .hotel-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .hotel-info p.location {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 0.6rem;
+        }
+
+        .services {
+            margin-bottom: 0.6rem;
+        }
+
+        .services i {
+            margin-right: 0.6rem;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .rating {
+            display: inline-flex;       
+            align-items: center;        
+            margin-right: 1rem;
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+        }
+
+        .rating .value {
+            background: #fad931;
+            border-radius: 10%;
+            width: 44px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.5rem;
+            font-size:12px;
+        }
+
+        .rating .reviews {
+            color: #777;
+        }
+
+        .price {
+          position: absolute;  
+          bottom: 0.3rem;
+          right: 1rem;
+          display: flex;
+          font-size: 0.8rem;
+          align-items: flex-end;
+          flex-direction: column;
+        }
+
+        .price .label,
+        .price .original,
+        .price .discount {
+            display: block;
+            margin-bottom: 0.2rem; /* 줄 간격 조정 */
+        }
+
+        .price .discount {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+
+        /* 배지(할인/인기) */
+        .badge {
+            position: absolute;
+            top: auto;    
+            left: auto;     
+            bottom: 4rem;  
+            right: 1rem;
+            padding: 0.3rem 0.5rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            color: #fff;
+        }
+
+        .badge.discount {
+            background: #ff6f61;
+          margin-bottom: 0;           
+      }
+
+        /* 옵션보기 버튼 */
+        .option-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* 더보기 */
+        .load-more {
+            display: block;
+            width: 120px;
+            margin: 2rem auto;
+            text-align: center;
+            padding: 0.6rem 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        /* footer */
+        footer {
+            background: #f1f1f1;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .footer-top .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .footer-bottom {
+            text-align: center;
+        }
+
+        .footer-bottom .social-icons a {
+            margin: 0 0.5rem;
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .filtering-title {
+            margin-left: 20px;
+            color: #656565;
+        }
+
+        .divider {
+            border-top: 1px solid #ccc;
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- header -->
+    <header>
+        <div class="logo">🔴 Site Name</div>
+        <nav class="user-nav">
+            <a href="#">NickName님</a>
+            <a href="#">MyPage</a>
+            <a href="#">찜 목록</a>
+            <a href="#">로그아웃</a>
+        </nav>
+    </header>
+
+    <!-- 검색 -->
+    <!-- 검색 -->
+    <!-- 검색 섹션 -->
+    <section class="search-section">
+        <div class="search-bar">
+            <div class="search-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <div class="info">
+                    <span class="title">목적지</span>
+                    <span class="value">부산 해운대</span>
+                </div>
+            </div>
+            <div class="search-item">
+                <i class="fas fa-calendar-alt"></i>
+                <div class="info">
+                    <span class="title">날짜</span>
+                    <span class="value">5월 1일 ~ 5월 7일</span>
+                </div>
+            </div>
+            <div class="search-item">
+                <i class="fas fa-user"></i>
+                <div class="info">
+                    <span class="title">인원수</span>
+                    <span class="value">2명</span>
+                </div>
+            </div>
+            <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+    </section>
+
+
+
+    <!-- main -->
+    <div class="main">
+
+        <!-- sidebar filter -->
+
+        <aside class="sidebar">
+            <div class="divider" />
+            <div class="filter-section">
+                <h4>필터링</h4>
+                <div class="filtering-title">
+                    <h5 style="padding:5px 0">서비스</h5>
+                    <ul>
+                        <li><label><input type="checkbox" />숙박</label></li>
+                        <li><label><input type="checkbox" />액티비티</label></li>
+                        <li><label><input type="checkbox" />렌트카</label></li>
+                        <li><label><input type="checkbox" />쇼핑</label></li>
+                    </ul>
+                </div>
+                <div class="divider" />
+            </div>
+            <div class="filter-section">
+                <div class="filtering-title">
+                    <h5 style="padding:5px 0">시설 등급</h5>
+                    <ul>
+                        <li><label><input type="radio" name="star" />5성</label></li>
+                        <li><label><input type="radio" name="star" />4성</label></li>
+                        <li><label><input type="radio" name="star" />3성</label></li>
+                        <li><label><input type="radio" name="star" />2성</label></li>
+                        <li><label><input type="radio" name="star" />1성</label></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="divider" />
+    </div>
+    <div class="filter-section">
+        <div class="filtering-title">
+            <h5>가격 (1박당)</h5>
+            <input type="range" min="0" max="500000" step="10000" />
+            <div class="price-range">₩0 ~ ₩500,000</div>
+        </div>
+    </div>
+    </aside>
+
+    <!-- content: 호텔 카드 리스트 -->
+    <section class="content">
+
+        <!-- 카드 #1 -->
+        <div class="hotel-card">
+            <div class="hotel-img"><!-- 이미지 --></div>
+            <div class="hotel-info">
+                <div class="badge discount">14% 할인</div>
+                <button class="option-btn">찜하기</button>
+                <h3>파라다이스 호텔 부산</h3>
+                <p class="location">해운대</p>
+                <div class="services">
+                    <i class="fas fa-bed"></i>
+                    <i class="fas fa-coffee"></i>
+                    <i class="fas fa-swimming-pool"></i>
+                </div>
+                <div class="rating">
+                    <div class="value">★ 9.7</div>
+                    <div class="reviews">리뷰 23개</div>
+                </div>
+                <div class="price">
+                  <div style="display:flex"> 
+                    <span class="label">1박 요금&ensp;</span>
+                    <span class="original"> ₩102,000</span>
+                  </div>
+                  <span class="discount">₩875,000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 카드 #2 -->
+        <div class="hotel-card">
+            <div class="hotel-img"></div>
+            <div class="hotel-info">
+                <div class="badge discount">17% 할인</div>
+                <button class="option-btn">찜하기</button>
+                <h3>시그니엘 부산</h3>
+                <p class="location">해운대</p>
+                <div class="services">
+                    <i class="fas fa-bed"></i>
+                    <i class="fas fa-coffee"></i>
+                    <i class="fas fa-swimming-pool"></i>
+                </div>
+                <div class="rating">
+                    <div class="value">★ 9.4</div>
+                    <div class="reviews">리뷰 52개</div>
+                </div>
+                <div class="price">
+                    <div style="display:flex"> 
+                    <span class="label">1박 요금&ensp;</span>
+                    <span class="original"> ₩117,000</span>
+                  </div>
+                  <span class="discount">₩1,050,000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 카드 #3 -->
+        <div class="hotel-card">
+            <div class="hotel-img"></div>
+            <div class="hotel-info">
+                <button class="option-btn">찜하기</button>
+                <h3>그랜드 조선 부산</h3>
+                <p class="location">해운대</p>
+                <div class="services">
+                    <i class="fas fa-bed"></i>
+                    <i class="fas fa-swimming-pool"></i>
+                </div>
+                <div class="rating">
+                    <div class="value">★ 8.9</div>
+                    <div class="reviews">리뷰 64개</div>
+                </div>
+                <div class="price">
+                    <div style="display:flex"> 
+                    <span class="label">1박 요금&ensp;</span>
+                    <span class="original"> ₩97,000</span>
+                  </div>
+                  <span class="discount">₩824,000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 카드 #4 -->
+        <div class="hotel-card">
+            <div class="hotel-img"></div>
+            <div class="hotel-info">
+                <button class="option-btn">찜하기</button>
+                <h3>웨스틴 조선 부산</h3>
+                <p class="location">해운대</p>
+                <div class="services">
+                    <i class="fas fa-bed"></i>
+                    <i class="fas fa-coffee"></i>
+                </div>
+                <div class="rating">
+                    <div class="value">★ 9.2</div>
+                    <div class="reviews">리뷰 32개</div>
+                </div>
+                <div class="price">
+                    <div style="display:flex"> 
+                    <span class="label">1박 요금&ensp;</span>
+                    <span class="original"> ₩127,000</span>
+                  </div>
+                  <span class="discount">₩916,000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 카드 #5 -->
+        <div class="hotel-card">
+            <div class="hotel-img"></div>
+            <div class="hotel-info">
+                <div class="badge discount">14% 할인</div>
+                <button class="option-btn">찜하기</button>
+                <h3>엘시티 레지던스</h3>
+                <p class="location">해운대</p>
+                <div class="services">
+                    <i class="fas fa-bed"></i>
+                </div>
+                <div class="rating">
+                    <div class="value">★ 9.1</div>
+                    <div class="reviews">리뷰 16개</div>
+                </div>
+                <div class="price">
+                    <div style="display:flex"> 
+                    <span class="label">1박 요금&ensp;</span>
+                    <span class="original"> ₩134,000</span>
+                  </div>
+                  <span class="discount">₩945,000</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="load-more">더보기</button>
+    </section>
+    </div>
+
+    <!-- footer -->
+    <footer>
+        <div class="footer-top">
+            <div class="logo">Site Name</div>
+            <div class="footer-links">
+                <ul>
+                    <li>Page 1</li>
+                    <li>Page 2</li>
+                    <li>Page 3</li>
+                </ul>
+                <ul>
+                    <li>Topic A</li>
+                    <li>Topic B</li>
+                    <li>Topic C</li>
+                </ul>
+                <ul>
+                    <li>Info 1</li>
+                    <li>Info 2</li>
+                    <li>Info 3</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

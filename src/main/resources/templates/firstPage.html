@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Site Name - 호텔 예약</title>
+
+	<script th:src="@{https://dapi.kakao.com/v2/maps/sdk.js(appkey=${kakaoAppKey})}"></script>
+	
+	<!-- Font Awesome (소셜 아이콘용1) -->
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+	<style>
+		/* Reset */
+		* {
+			margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .user-links a {
+            margin-left: 1rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        /* Hero 섹션 */
+        .hero {
+            position: relative;
+            height: 500px;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            background-image: url(/images/firstPage1.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        .booking-form {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+
+        .booking-form h2 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .booking-form input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .booking-form button {
+            width: 100%;
+            padding: 0.7rem;
+            background: #ff6f61;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* AI 컨설팅 */
+        .consulting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3rem 2rem;
+        }
+
+        .consulting h2 {
+            font-size: 1.5rem;
+        }
+
+        .consulting .btn {
+            padding: 0.7rem 1.2rem;
+            background: #ff6f61;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        /* 서비스 카드 */
+        .services {
+            display: flex;
+            justify-content: space-around;
+            padding: 0 2rem 3rem;
+        }
+
+        .service-item {
+            width: 30%;
+            text-align: center;
+        }
+
+        .service-img1 {
+            width: 100%;
+            padding-top: 120%;
+            background-image: url(/images/rc1.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-img2 {
+            width: 100%;
+            padding-top: 120%;
+            background-image: url(/images/rc2.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-img3 {
+            width: 100%;
+            padding-top: 120%;
+            background-image: url(/images/rc3.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-item p {
+            font-size: 1rem;
+            color: #555;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        /* 광고 이미지 슬라이더 */
+        .ad-slider {
+            background: #f9f5f0;
+        }
+
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            width: 1000px;
+            height: 300px;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.4s ease-in-out;
+            gap: 10px;
+        }
+
+        .slide1 {
+            min-width: 50%;
+            height: auto;
+            background-image: url(/images/event1.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 10px;
+        }
+
+        .slide2 {
+            min-width: 50%;
+            height: auto;
+            background-image: url(/images/event2.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 10px
+        }
+
+
+        .slide3 {
+            min-width: 50%;
+            height: 300px;
+            background-image: url(/images/event3.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 10px
+        }
+
+        .slide4 {
+            min-width: 50%;
+            height: 300px;
+            background-image: url(/images/event4.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 10px
+        }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        .slider-btn.prev {
+            left: 10px;
+        }
+
+        .slider-btn.next {
+            right: 10px;
+        }
+
+        /* 추천 여행지 */
+        .recommend {
+            padding: 3rem 2rem;
+        }
+
+        .recommend h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .destinations {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .dest-item {
+            width: 32%;
+        }
+
+        .dest-img1 {
+            width: 100%;
+            padding-top: 60%;
+            background-image: url(/images/r1.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .dest-img2 {
+            width: 100%;
+            padding-top: 60%;
+            background-image: url(/images/r2.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+
+        .dest-img3 {
+            width: 100%;
+            padding-top: 60%;
+            background-image: url(/images/r3.jpg);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .dest-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .dest-item p {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* Footer */
+        footer {
+            background: #f1f1f1;
+            padding: 2rem;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .footer-bottom {
+            text-align: center;
+        }
+
+        .social-icons a {
+            margin: 0 0.5rem;
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .sb {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+		
+	
+    </style>
+
+</head>
+
+<body>
+	
+
+ 
+	<!-- Header -->
+	<header>
+		<div class="logo">Site Name</div>
+		<div class="user-links">
+			<a sec:authorize="isAnonymous()" th:href="@{/signupPage}">회원가입</a>
+			<a sec:authorize="isAnonymous()" th:href="@{/login}">로그인</a>
+			<!--<a th:href="@{/signupPage}">회원가입</a>
+			<a th:href="@{/login}">로그인</a>-->
+			<span sec:authorize="isAuthenticated()">
+				안녕하세요, <span th:text="${#authentication.name}">홍길동</span>님
+			</span>
+			<a sec:authorize="isAuthenticated()" th:href="@{/myPage}">MyPage</a>
+			<a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
+
+		</div>
+    </header>
+
+
+    <!-- Hero + Booking Form -->
+    <section class="hero">
+        <div class="hero-image"><!-- 히어로 이미지 플레이스홀더 --></div>
+        <div class="booking-form">
+            <h2>원하는 숙소를 예약하세요</h2>
+
+            <div class="form-group">
+                <label for="location">목적지</label>
+                <input type="text" id="location" name="location" />
+            </div>
+            <div class="sb">
+                <div class="form-group">
+                    <label for="checkin">체크인</label>
+                    <input type="date" id="checkin" name="checkin" />
+                </div>
+                <div class="form-group">
+                    <label for="checkout">체크아웃</label>
+                    <input type="date" id="checkout" name="checkout" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="guests">인원 수</label>
+                <input type="number" id="guests" name="guests" min="1" />
+            </div>
+
+            <button>검색</button>
+        </div>
+		
+    </section>
+
+    <!-- AI 컨설팅 -->
+    <section class="consulting">
+        <h2>Ai: 나에게 딱 맞는 여행지 컨설팅</h2>
+        <button class="btn">Ai 컨설팅 받기</button>
+    </section>
+
+    <!-- 서비스별 카드 -->
+    <section class="services">
+        <div class="service-item">
+            <div class="service-img1"><!-- 휴양 --></div>
+            <p>휴양</p>
+        </div>
+        <div class="service-item">
+            <div class="service-img2"><!-- 액티비티 --></div>
+            <p>액티비티</p>
+        </div>
+        <div class="service-item">
+            <div class="service-img3"><!-- 쇼핑 --></div>
+            <p>쇼핑</p>
+        </div>
+    </section>
+
+    <!-- 광고 이미지 슬라이더 -->
+    <section class="ad-slider">
+        <div class="slider-container">
+            <div class="slides">
+                <div class="slide1"><!-- 슬라이드 1 --></div>
+                <div class="slide2"><!-- 슬라이드 2 --></div>
+                <div class="slide3"><!-- 슬라이드 3 --></div>
+                <div class="slide4"><!-- 슬라이드 4 --></div>
+            </div>
+            <button class="slider-btn prev">&lt;</button>
+            <button class="slider-btn next">&gt;</button>
+        </div>
+    </section>
+
+    <!-- 추천 여행지 -->
+    <section class="recommend">
+        <h3>추천 여행지</h3>
+        <div class="destinations">
+            <div class="dest-item">
+                <div class="dest-img1"></div>
+                <h4>전주 한옥마을</h4>
+                <p>한옥마을</p>
+            </div>
+            <div class="dest-item">
+                <div class="dest-img2"></div>
+                <h4>제주도</h4>
+                <p>성산일출봉</p>
+            </div>
+            <div class="dest-item">
+                <div class="dest-img3"></div>
+                <h4>강릉</h4>
+                <p>경포해변</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-top">
+            <div class="logo">Site Name</div>
+            <div class="footer-links">
+                <ul>
+                    <li>Page 1</li>
+                    <li>Page 2</li>
+                    <li>Page 3</li>
+                </ul>
+                <ul>
+                    <li>Topic A</li>
+                    <li>Topic B</li>
+                    <li>Topic C</li>
+                </ul>
+                <ul>
+                    <li>Info 1</li>
+                    <li>Info 2</li>
+                    <li>Info 3</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const slides = document.querySelector('.slides');
+        const prevBtn = document.querySelector('.slider-btn.prev');
+        const nextBtn = document.querySelector('.slider-btn.next');
+        const totalSlides = slides.children.length / 2;
+        let currentIndex = 0;
+
+        function updateSlidePosition() {
+            slides.style.transform = `translateX(-${currentIndex * 100 + 1}%)`;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateSlidePosition();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSlidePosition();
+        });
+    </script>
+	<div id="map" style="width:100%; height:500px;"></div>
+
+	 <!-- 서버에서 직렬화된 JSON 가져오기 -->
+	 <script th:inline="javascript">
+	   /*<![CDATA[*/
+	   // hotelsJson 은 문자열 형태의 JSON
+	   var hotels = JSON.parse(/*[[${hotelsJson}]]*/ '[]');
+	   /*]]>*/
+	 </script>
+
+	 <script>
+	   // DOMContentLoaded 보장 후 실행
+	   document.addEventListener('DOMContentLoaded', function() {
+	     // 지도 생성
+	     var mapContainer = document.getElementById('map');
+	     var mapOption = {
+	       center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울 시청 기준
+	       level: 7
+	     };
+	     var map = new kakao.maps.Map(mapContainer, mapOption);
+
+	     // DB에서 넘어온 호텔 리스트 순회하며 마커 찍기
+	     hotels.forEach(function(h) {
+	       var position = new kakao.maps.LatLng(h.latitude, h.longitude);
+	       var marker = new kakao.maps.Marker({
+	         map: map,
+	         position: position,
+	         title: h.hotelName
+	       });
+
+	       // InfoWindow(툴팁) 옵션
+	       var infoWindow = new kakao.maps.InfoWindow({
+	         content: `<div style="padding:5px;
+			    display:inline-block;
+			    white-space:nowrap;
+			    min-width:150px;">${h.hotelName}</div>`
+	       });
+
+	       // 마커에 mouseover/out 이벤트 등록
+	       kakao.maps.event.addListener(marker, 'mouseover', function() {
+	         infoWindow.open(map, marker);
+	       });
+	       kakao.maps.event.addListener(marker, 'mouseout', function() {
+	         infoWindow.close();
+	       });
+	     });
+	   });
+	 </script>
+	
+</body>
+
+</html>
