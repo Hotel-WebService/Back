@@ -9,5 +9,5 @@ import com.sw.entity.Hotel;
 
 @Repository
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
-	
+	Optional<Hotel> findByHotelName(String hotelName);
 }

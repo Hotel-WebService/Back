@@ -1,7 +1,7 @@
 package com.sw.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,10 +42,10 @@ public class Hotel {
     @Column(name = "district", length = 100)
     private String district;
 
-    @Column(name = "latitude", precision = 9, scale = 6)
+    @Column(name = "latitude", precision = 12, scale = 10)
     private BigDecimal latitude;
 
-    @Column(name = "longitude", precision = 9, scale = 6)
+    @Column(name = "longitude", precision = 13, scale = 10)
     private BigDecimal longitude;
 
     @Column(name = "hotelnumber", length = 50)
@@ -56,13 +56,20 @@ public class Hotel {
 
     @Column(name = "parking_lot", nullable = false)
     private Boolean parkingLot;
-
+/*
     @Column(name = "check_in")
     private LocalDate checkIn;
 
     @Column(name = "check_out")
     private LocalDate checkOut;
+*/
+    
+    @Column(name = "check_in", columnDefinition = "TIME")
+    private LocalTime checkIn;
 
+    @Column(name = "check_out", columnDefinition = "TIME")
+    private LocalTime checkOut;
+    
     public Hotel() {
     }
 }
