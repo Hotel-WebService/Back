@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sw.entity.HotelUser;
@@ -143,5 +144,15 @@ public class UserInfoController {
         resp.put("status", "success");
         return ResponseEntity.ok(resp);
     }
+    
+    
+ // 아이디 중복 체크용
+    @GetMapping("/check-id")
+    public ResponseEntity<?> checkID(@RequestParam String loginID) {
+        boolean exists = hoteluserRepository.findByLoginID(loginID).isPresent();
+        return ResponseEntity.ok(Map.of("available", !exists));
+    }
+    
+    
     
 }
