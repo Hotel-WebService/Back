@@ -70,6 +70,9 @@ public class Hotel {
     @Column(name = "check_out", columnDefinition = "TIME")
     private LocalTime checkOut;
     
+    @Column(name = "star")
+    private String star;
+    
     public Hotel() {
     }
 }

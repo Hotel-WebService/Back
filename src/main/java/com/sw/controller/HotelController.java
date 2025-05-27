@@ -74,6 +74,7 @@ public class HotelController {
         m.put("parking_lot", h.getParkingLot());
         m.put("check_in",    h.getCheckIn());
         m.put("check_out",   h.getCheckOut());
+        m.put("star", h.getStar());
         return m;
     }
 }
