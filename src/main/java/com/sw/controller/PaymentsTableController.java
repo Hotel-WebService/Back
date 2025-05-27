@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sw.dto.PaymentsDTO;
 import com.sw.entity.Payments;
 import com.sw.service.PaymentsService;
 
@@ -36,4 +38,13 @@ public class PaymentsTableController {
         return paymentsService.findByUserID(userId);
     }
 
+    @GetMapping("/user/{userId}/details")
+	public List<PaymentsDTO> getUserPaymentDetails(@PathVariable Long userId) {
+		return paymentsService.getPaymentDetailsByUserId(userId);
+	}
+
+	@DeleteMapping("/{paymentId}")
+	public void deletePayment(@PathVariable Long paymentId) {
+		paymentsService.deleteById(paymentId);
+	}
 }
