@@ -1,27 +1,34 @@
 package com.sw.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "paymentstable")
-@Data
-public class Payments {
+@Getter
+@Setter
+@Table(name = "reviewtable")
+public class ReviewTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long paymentID;
+    private Long reviewID;
+
+    private Long hotelID;
     private Long userID;
     private Long reservationID;
-    private BigDecimal amount;
+    private Integer rating;
 
-    private String payment_method;
-    private String payment_status;
-    private LocalDateTime pay_date;
+    @Column(columnDefinition = "TEXT")
+    private String comment;
+
+    private LocalDateTime commentDate;
+
+    // Getter/Setter
 }

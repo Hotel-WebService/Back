@@ -77,6 +77,8 @@ public class SecurityConfig {
                   "/reservationPage",
                   "/api/**"
                 ).permitAll()
+                .requestMatchers("/api/reviews/**", "/api/reservation/my").authenticated() // 리뷰/내예약만 인증
+                .requestMatchers("/api/**").permitAll()
                 .anyRequest().authenticated()  // 그 외는 로그인 필요
             )
 

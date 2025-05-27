@@ -12,5 +12,6 @@ public interface HotelUserRepository extends JpaRepository<HotelUser, Integer> {
 public interface HotelUserRepository extends JpaRepository<HotelUser, Long> {
     // loginID 칼럼으로 Optional<User> 조회
     Optional<HotelUser> findByLoginID(String loginID);
+    Optional<HotelUser> findByName(String name);
 }
 

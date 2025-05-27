@@ -1,10 +1,18 @@
 package com.sw.controller;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.sw.entity.Payments;
 import com.sw.service.PaymentsService;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -22,4 +30,10 @@ public class PaymentsTableController {
         payments.setPay_date(LocalDateTime.now());
         return paymentsService.save(payments);
     }
+    
+    @GetMapping("/user/{userId}")
+    public List<Payments> getPaymentsByUserID(@PathVariable Long userId) {
+        return paymentsService.findByUserID(userId);
+    }
+
 }

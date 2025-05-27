@@ -1,8 +1,11 @@
 package com.sw.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.sw.entity.Payments;
 import com.sw.repository.PaymentsRepository;
-import org.springframework.stereotype.Service;
 
 @Service
 public class PaymentsService {
@@ -13,4 +16,9 @@ public class PaymentsService {
     public Payments save(Payments payments) {
         return paymentsRepository.save(payments);
     }
+    
+    
+    public List<Payments> findByUserID(Long userID) {
+            return paymentsRepository.findByUserID(userID);
+        }
 }

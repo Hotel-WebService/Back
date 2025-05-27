@@ -1,6 +1,11 @@
 package com.sw.repository;
 
-import com.sw.entity.Payments;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PaymentsRepository extends JpaRepository<Payments, Long> {}
+import com.sw.entity.Payments;
+
+public interface PaymentsRepository extends JpaRepository<Payments, Long> {
+	   List<Payments> findByUserID(Long userID);
+	}
