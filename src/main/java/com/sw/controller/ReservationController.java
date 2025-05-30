@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import com.sw.entity.HotelUser;
 import com.sw.entity.Reservation;
 import com.sw.repository.HotelUserRepository;
 import com.sw.repository.ReservationRepository;
+import com.sw.service.PaymentsService;
 import com.sw.service.ReservationService;
 
 @RestController
@@ -30,6 +33,10 @@ public class ReservationController {
 	@Autowired
 	HotelUserRepository userRepo;
 
+	 @Autowired
+	 private PaymentsService paymentsService;
+
+	
     private final ReservationService reservationService;
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
@@ -57,4 +64,21 @@ public class ReservationController {
         Long userID = user.getUserID();
         return reservationRepo.findByUserIDAndHotelID(userID, hotelID);
     }
+    
+	@DeleteMapping("/{reservationID}")
+	public void deletePayment(@PathVariable Long paymentId) {
+		paymentsService.deleteById(paymentId);
+	}
+    
+    @PostMapping("/cancelReservation")
+    public String cancelReservation(@RequestParam String impUid, @RequestParam String reason) {
+        // 예약 취소 로직(예약 상태 변경 등) 먼저 처리
+
+        // 결제 취소 호출
+        paymentsService.cancelPayment(impUid, reason);
+
+        return "예약 및 결제 취소 완료";
+    }
+    
+    
 }

@@ -2,6 +2,7 @@ package com.sw.controller;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,4 +90,11 @@ public class ReviewController {
     public Iterable<ReviewTable> getHotelReviews(@PathVariable Long hotelID) {
         return reviewRepo.findByHotelID(hotelID);
     }
+    
+    // 리뷰 LISTPAGE 연동
+    @GetMapping
+    public List<ReviewTable> getAllReviews() {
+        return reviewRepo.findAll();
+    }
+    
 }
