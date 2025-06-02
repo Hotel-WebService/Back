@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.sw.dto.PaymentsDTO;
@@ -72,5 +73,10 @@ public class PaymentsService {
             System.out.println("결제 취소 실패: " + response.getBody());
             // 필요 시 예외처리 throw new RuntimeException 등
         }
+    }
+    
+    @Transactional
+    public void deleteByReservationId(Long reservationId) {
+        paymentsRepository.deleteByReservationID(reservationId);
     }
 }

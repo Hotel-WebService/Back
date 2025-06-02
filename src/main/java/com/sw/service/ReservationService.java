@@ -1,8 +1,11 @@
 package com.sw.service;
 
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.sw.entity.Reservation;
 import com.sw.repository.ReservationRepository;
-import org.springframework.stereotype.Service;
 
 @Service
 public class ReservationService {
@@ -17,4 +20,9 @@ public class ReservationService {
     public void deleteById(Long reservationID) {
     	 reservationRepository.deleteById(reservationID);
 	}
+    
+    public Reservation findById(Long reservationID) {
+        Optional<Reservation> opt = reservationRepository.findById(reservationID);
+        return opt.orElse(null); // 없으면 null 반환
+    }
 }

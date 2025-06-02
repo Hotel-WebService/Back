@@ -11,16 +11,21 @@ import com.sw.dto.PaymentsDTO;
 
 public interface PaymentsRepository extends JpaRepository<Payments, Long> {
 	   List<Payments> findByUserID(Long userID);
-	   
+	   void deleteByReservationID(Long reservationID);
 	   @Query("""
 				SELECT new com.sw.dto.PaymentsDTO(
 				  p.paymentID,
+				  p.reservationID,
+				  h.hotelID,
+	   			  r.roomID,
 				  h.hotelName,
 				  r.room_name,
 				  p.amount,
 				  p.payment_method,
 				  p.payment_status,
-				  p.pay_date
+				  p.pay_date,
+				  rsv.check_in_date,
+				  rsv.check_out_date
 				)
 				FROM Payments p
 				JOIN Reservation rsv ON p.reservationID = rsv.reservationID

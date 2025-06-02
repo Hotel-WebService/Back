@@ -21,6 +21,7 @@ import com.sw.repository.HotelUserRepository;
 import com.sw.repository.ReservationRepository;
 import com.sw.service.PaymentsService;
 import com.sw.service.ReservationService;
+import com.sw.service.RoomQuantityService;
 
 @RestController
 @RequestMapping("/api/reservation")
@@ -30,6 +31,8 @@ public class ReservationController {
 	@Autowired
 	private ReservationRepository reservationRepo;
 	
+	private final RoomQuantityService roomQuantityService;
+	
 	@Autowired
 	HotelUserRepository userRepo;
 
@@ -38,8 +41,10 @@ public class ReservationController {
 
 	
     private final ReservationService reservationService;
-    public ReservationController(ReservationService reservationService) {
+    
+    public ReservationController(ReservationService reservationService, RoomQuantityService roomQuantityService) {
         this.reservationService = reservationService;
+        this.roomQuantityService = roomQuantityService;
     }
 
     @PostMapping
@@ -65,11 +70,12 @@ public class ReservationController {
         return reservationRepo.findByUserIDAndHotelID(userID, hotelID);
     }
     
+    /*
 	@DeleteMapping("/{reservationID}")
 	public void deletePayment(@PathVariable Long paymentId) {
 		paymentsService.deleteById(paymentId);
 	}
-    
+    */
     @PostMapping("/cancelReservation")
     public String cancelReservation(@RequestParam String impUid, @RequestParam String reason) {
         // 예약 취소 로직(예약 상태 변경 등) 먼저 처리
@@ -78,6 +84,30 @@ public class ReservationController {
         paymentsService.cancelPayment(impUid, reason);
 
         return "예약 및 결제 취소 완료";
+    }
+    
+    @DeleteMapping("/{reservationID}")
+    public void deleteById(@PathVariable Long reservationID) {
+        // 1) 예약 정보 찾기
+        Reservation reservation = reservationService.findById(reservationID);
+        if (reservation != null) {
+            // 2) 예약 상태를 취소로 변경(혹은 실제 삭제)
+            reservation.setStatus(Reservation.Status.예약취소);
+            reservationService.save(reservation);
+
+            // 3) 객실 재고 복구
+            roomQuantityService.cancelRoomReserve(
+                reservation.getRoomID(),
+                reservation.getCheck_in_date(),
+                1
+            );
+
+            // 4) 해당 예약과 연결된 결제 row 삭제
+            paymentsService.deleteByReservationId(reservationID);
+
+            // 5) 필요시 예약 row 자체도 삭제하고 싶다면 아래 코드 사용
+            reservationService.deleteById(reservationID);
+        }
     }
     
     
