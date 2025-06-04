@@ -16,22 +16,22 @@ import lombok.Data;
 @Table(name = "reservationtable")
 @Data
 public class Reservation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reservationID;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long reservationID;
 
-    private Long userID;
-    private Long roomID;
+	private Long userID;
+	private Long roomID;
 
-    private LocalDate check_in_date;
-    private LocalDate check_out_date;
+	private LocalDate check_in_date;
+	private LocalDate check_out_date;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
+	@Enumerated(EnumType.STRING)
+	private Status status;
 
-    private LocalDateTime reservationDate;
+	private LocalDateTime reservationDate;
 
-    public enum Status {
-        예약완료, 예약취소
-    }
+	public enum Status {
+		예약완료, 예약취소
+	}
 }

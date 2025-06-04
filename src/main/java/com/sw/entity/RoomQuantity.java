@@ -19,31 +19,33 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "room_quantity")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class RoomQuantity {
 
-    @EmbeddedId
-    private RoomQuantityId id; // 복합키 (roomID, date)
+	@EmbeddedId
+	private RoomQuantityId id; // 복합키 (roomID, date)
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "roomID", insertable = false, updatable = false)
-    @JsonIgnore
-    private Room room;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "roomID", insertable = false, updatable = false)
+	@JsonIgnore
+	private Room room;
 
-    @Column(name = "total_count")
-    private Integer totalCount;
+	@Column(name = "total_count")
+	private Integer totalCount;
 
-    @Column(name = "reserved_count")
-    private Integer reservedCount;
+	@Column(name = "reserved_count")
+	private Integer reservedCount;
 
-    @Column(name = "available_count", insertable = false, updatable = false)
-    private Integer availableCount;
+	@Column(name = "available_count", insertable = false, updatable = false)
+	private Integer availableCount;
 
-    @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
-    private LocalDateTime createdAt;
+	@Column(name = "created_at", nullable = false, updatable = false, insertable = false)
+	private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false, insertable = false)
-    private LocalDateTime updatedAt;
+	@Column(name = "updated_at", nullable = false, insertable = false)
+	private LocalDateTime updatedAt;
 }
-
-

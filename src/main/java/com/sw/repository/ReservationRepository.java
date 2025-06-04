@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    // (JPQL)
-    @Query("SELECT r FROM Reservation r JOIN Room room ON r.roomID = room.roomID " +
-           "WHERE r.userID = :userID AND room.hotelID = :hotelID")
-    List<Reservation> findByUserIDAndHotelID(@Param("userID") Long userID, @Param("hotelID") Long hotelID);
+	// (JPQL)
+	@Query("SELECT r FROM Reservation r JOIN Room room ON r.roomID = room.roomID "
+			+ "WHERE r.userID = :userID AND room.hotelID = :hotelID")
+	List<Reservation> findByUserIDAndHotelID(@Param("userID") Long userID, @Param("hotelID") Long hotelID);
 }

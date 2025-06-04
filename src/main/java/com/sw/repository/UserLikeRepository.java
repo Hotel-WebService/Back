@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserLikeRepository extends JpaRepository<UserLike, Long> {
-    List<UserLike> findByUserID(Long userID);
-    Optional<UserLike> findByUserIDAndHotelID(Long userID, Long hotelID);
-    void deleteByUserIDAndHotelID(Long userID, Long hotelID);
+	List<UserLike> findByUserID(Long userID);
+
+	Optional<UserLike> findByUserIDAndHotelID(Long userID, Long hotelID);
+
+	void deleteByUserIDAndHotelID(Long userID, Long hotelID);
 }

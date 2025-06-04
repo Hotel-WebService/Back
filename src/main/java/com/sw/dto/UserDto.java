@@ -10,15 +10,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDto {
-    private String name;
-    
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birthday;
-    
-    private String email;
-    private String punNumber;
-    private String loginID;
-    private String loginPassword;
+	private String name;
 
-    // Getters & Setters
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate birthday;
+
+	private String email;
+	private String punNumber;
+	private String loginID;
+	private String loginPassword;
+
+	// Getters & Setters
 }

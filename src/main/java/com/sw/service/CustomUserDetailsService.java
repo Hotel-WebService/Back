@@ -13,21 +13,19 @@ import com.sw.repository.HotelUserRepository;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final HotelUserRepository repo;
+	private final HotelUserRepository repo;
 
-    public CustomUserDetailsService(HotelUserRepository repo) {
-        this.repo = repo;
-    }
+	public CustomUserDetailsService(HotelUserRepository repo) {
+		this.repo = repo;
+	}
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        HotelUser user = repo.findByLoginID(username)
-            .orElseThrow(() -> new UsernameNotFoundException("LoginID not found: " + username));
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		HotelUser user = repo.findByLoginID(username)
+				.orElseThrow(() -> new UsernameNotFoundException("LoginID not found: " + username));
 
-        return org.springframework.security.core.userdetails.User.builder()
-            .username(user.getLoginID())
-            .password(user.getLoginPassword())
-            .authorities(Collections.emptyList())  // 필요하면 권한 추가
-            .build();
-    }
+		return org.springframework.security.core.userdetails.User.builder().username(user.getLoginID())
+				.password(user.getLoginPassword()).authorities(Collections.emptyList()) // 필요하면 권한 추가
+				.build();
+	}
 }

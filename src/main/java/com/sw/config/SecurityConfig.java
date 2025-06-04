@@ -19,107 +19,72 @@ import com.sw.service.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled=true)
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-	
-	  private final CustomUserDetailsService userDetailsService;
 
-	    public SecurityConfig(CustomUserDetailsService uds) {
-	        this.userDetailsService = uds;
-	    }
-	    
-	    /*
-	    @Bean
-	    public CorsConfigurationSource corsConfigurationSource() {
-	        CorsConfiguration cfg = new CorsConfiguration();
-	        cfg.setAllowedOrigins(List.of("http://localhost:3000"));
-	        cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
-	        cfg.setAllowCredentials(true);
-	        cfg.setAllowedHeaders(List.of("*"));
+	private final CustomUserDetailsService userDetailsService;
 
-	        UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
-	        src.registerCorsConfiguration("/**", cfg);
-	        return src;
-	    }    
-	    */
-
-	    @Bean
-	    public DaoAuthenticationProvider authenticationProvider() {
-	        DaoAuthenticationProvider p = new DaoAuthenticationProvider();
-	        p.setUserDetailsService(userDetailsService);
-	        p.setPasswordEncoder(passwordEncoder());
-	        return p;
-	    }
+	public SecurityConfig(CustomUserDetailsService uds) {
+		this.userDetailsService = uds;
+	}
 
 	@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            // 개발 중에는 CSRF를 꺼두고, 나중에 켜기
-        	//.cors().and()
-        	.cors(Customizer.withDefaults())
-            .csrf(csrf -> csrf.disable())
-            
-            // 1) 인증 없이 접근 허용할 URL
-            .authorizeHttpRequests(auth -> auth
-            	.requestMatchers("/api/userinfo").permitAll()
-                .requestMatchers(
-                  "/",              // root
-                  "/firstpage",     // firstPageController
-                  "/error",
-                  "/signupPage",	// 회원가입 폼
-                  "/signup",
-                  "/api/userinfo",// 회원가입 
-                  "/login",         // 로그인 폼
-                  "/css/**",        // 정적 리소스
-                  "/js/**",
-                  "/images/**",
-                  "/image/**",
-                  "/reservationPage",
-                  "/api/**"
-                ).permitAll()
-                .requestMatchers("/api/reviews/**", "/api/reservation/my").authenticated() // 리뷰/내예약만 인증
-                .requestMatchers("/api/**").permitAll()
-                .anyRequest().authenticated()  // 그 외는 로그인 필요
-            )
+	public DaoAuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider p = new DaoAuthenticationProvider();
+		p.setUserDetailsService(userDetailsService);
+		p.setPasswordEncoder(passwordEncoder());
+		return p;
+	}
 
-            // 2) 폼 로그인
-            .formLogin(form -> form
-                .loginPage("/login")           // GET /login → 로그인 폼
-                .loginProcessingUrl("/login")  // POST /login → 스프링 시큐리티가 처리
-                .defaultSuccessUrl("/", true)  // .defaultSuccessUrl("/firstpage", true)
-                .failureUrl("/login?error")
-                .usernameParameter("loginID")
-                .passwordParameter("loginPassword")
-                .permitAll()
-            )
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http
+				// 개발 중에는 CSRF를 꺼두고, 나중에 켜기
+				// .cors().and()
+				.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
 
-            // 3) 로그아웃
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .permitAll()
-            );
+				// 1) 인증 없이 접근 허용할 URL
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/userinfo").permitAll().requestMatchers("/", // root
+						"/firstpage", // firstPageController
+						"/error", "/signupPage", // 회원가입 폼
+						"/signup", "/api/userinfo", // 회원가입
+						"/login", // 로그인 폼
+						"/css/**", // 정적 리소스
+						"/js/**", "/images/**", "/image/**", "/reservationPage", "/api/**").permitAll()
+						.requestMatchers("/api/reviews/**", "/api/reservation/my").authenticated() // 리뷰/내예약만 인증
+						.requestMatchers("/api/**").permitAll().anyRequest().authenticated() // 그 외는 로그인 필요
+				)
 
-        return http.build();
-    }
+				// 2) 폼 로그인
+				.formLogin(form -> form.loginPage("/login") // GET /login → 로그인 폼
+						.loginProcessingUrl("/login") // POST /login → 스프링 시큐리티가 처리
+						.defaultSuccessUrl("/", true) // .defaultSuccessUrl("/firstpage", true)
+						.failureUrl("/login?error").usernameParameter("loginID").passwordParameter("loginPassword")
+						.permitAll())
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-      CorsConfiguration cfg = new CorsConfiguration();
-      cfg.setAllowedOrigins(List.of("http://localhost:3000"));  // React 개발서버
-      cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE"));
-      cfg.setAllowedHeaders(List.of("*"));
-      cfg.setAllowCredentials(true);  // Credential(쿠키) 허용
+				// 3) 로그아웃
+				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
+						.permitAll());
 
-      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-      source.registerCorsConfiguration("/**", cfg);
-      return source;
-    }
-    
+		return http.build();
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration cfg = new CorsConfiguration();
+		cfg.setAllowedOrigins(List.of("http://localhost:3000")); // React 개발서버
+		cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+		cfg.setAllowedHeaders(List.of("*"));
+		cfg.setAllowCredentials(true); // Credential(쿠키) 허용
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", cfg);
+		return source;
+	}
+
 }

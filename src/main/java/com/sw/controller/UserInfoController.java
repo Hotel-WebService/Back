@@ -26,133 +26,119 @@ import com.sw.repository.HotelUserRepository;
 @RequestMapping("/api")
 public class UserInfoController {
 
-    private final HotelUserRepository hoteluserRepository;
-    private final PasswordEncoder      passwordEncoder;
+	private final HotelUserRepository hoteluserRepository;
+	private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserInfoController(HotelUserRepository hoteluserRepository,
-                              PasswordEncoder passwordEncoder) {
-        this.hoteluserRepository = hoteluserRepository;
-        this.passwordEncoder      = passwordEncoder;
-    }
+	@Autowired
+	public UserInfoController(HotelUserRepository hoteluserRepository, PasswordEncoder passwordEncoder) {
+		this.hoteluserRepository = hoteluserRepository;
+		this.passwordEncoder = passwordEncoder;
+	}
 
-    
-    /**-------------------- 회원가입(Signup) 추가 --------------------**/
-    public static class SignupDto {
-        public String name;
-        public String loginID;
-        public String loginPassword;
-        public String punNumber;
-        public String email;
-        public String birthday; // "YYYY-MM-DD" 형식
-    }
+	/** -------------------- 회원가입(Signup) 추가 -------------------- **/
+	public static class SignupDto {
+		public String name;
+		public String loginID;
+		public String loginPassword;
+		public String punNumber;
+		public String email;
+		public String birthday; // "YYYY-MM-DD" 형식
+	}
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody SignupDto dto) {
-        // 1) 로그인ID 중복 체크
-        Optional<HotelUser> exist = hoteluserRepository.findByLoginID(dto.loginID);
-        if (exist.isPresent()) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(Map.of("error", "이미 사용 중인 아이디입니다."));
-        }
+	@PostMapping("/signup")
+	public ResponseEntity<?> signup(@RequestBody SignupDto dto) {
+		// 1) 로그인ID 중복 체크
+		Optional<HotelUser> exist = hoteluserRepository.findByLoginID(dto.loginID);
+		if (exist.isPresent()) {
+			return ResponseEntity.badRequest().body(Map.of("error", "이미 사용 중인 아이디입니다."));
+		}
 
-        // 2) 새 사용자 엔티티 생성
-        HotelUser user = new HotelUser();
-        user.setName(dto.name);
-        user.setLoginID(dto.loginID);
-        user.setLoginPassword(passwordEncoder.encode(dto.loginPassword));
-        user.setPunNumber(dto.punNumber);
-        user.setEmail(dto.email);
-        user.setBirthday(LocalDate.parse(dto.birthday));
-        user.setSignUpDate(LocalDateTime.now());
+		// 2) 새 사용자 엔티티 생성
+		HotelUser user = new HotelUser();
+		user.setName(dto.name);
+		user.setLoginID(dto.loginID);
+		user.setLoginPassword(passwordEncoder.encode(dto.loginPassword));
+		user.setPunNumber(dto.punNumber);
+		user.setEmail(dto.email);
+		user.setBirthday(LocalDate.parse(dto.birthday));
+		user.setSignUpDate(LocalDateTime.now());
 
-        hoteluserRepository.save(user);
+		hoteluserRepository.save(user);
 
-        return ResponseEntity.ok(Map.of("status", "success"));
-    }
-    
- 
-    @GetMapping("/userinfo")
-    public ResponseEntity<Map<String, Object>> userinfo(Authentication auth) {
-        Map<String, Object> result = new HashMap<>();
+		return ResponseEntity.ok(Map.of("status", "success"));
+	}
 
-        boolean isAuth = auth != null
-                      && auth.isAuthenticated()
-                      && !(auth instanceof AnonymousAuthenticationToken);
+	@GetMapping("/userinfo")
+	public ResponseEntity<Map<String, Object>> userinfo(Authentication auth) {
+		Map<String, Object> result = new HashMap<>();
 
-        result.put("authenticated", isAuth);
+		boolean isAuth = auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken);
 
-        if (isAuth) {
-            String loginID = auth.getName();
-            Optional<HotelUser> userOpt = hoteluserRepository.findByLoginID(loginID);
-            if (userOpt.isPresent()) {
-            	HotelUser user = userOpt.get();
-                result.put("userID",       user.getUserID());
-                result.put("name",         user.getName());
-                result.put("birthday",     user.getBirthday());
-                result.put("email",        user.getEmail());
-                result.put("punNumber",    user.getPunNumber());
-                result.put("signUpDate",   user.getSignUpDate());
-                result.put("loginID",      user.getLoginID());
-                // 비밀번호 테스트 상 출력
-                result.put("loginPassword", user.getLoginPassword());
-            }
-        }
+		result.put("authenticated", isAuth);
 
-        return ResponseEntity.ok(result);
-    }
-    
-    
-    /** 추가: 클라이언트가 보낼 JSON 바인딩용 DTO **/
-    public static class UpdateUserDto {
-        public String name;
-        public String email;
-        public String punNumber;
-        public String loginPassword;
-    }
+		if (isAuth) {
+			String loginID = auth.getName();
+			Optional<HotelUser> userOpt = hoteluserRepository.findByLoginID(loginID);
+			if (userOpt.isPresent()) {
+				HotelUser user = userOpt.get();
+				result.put("userID", user.getUserID());
+				result.put("name", user.getName());
+				result.put("birthday", user.getBirthday());
+				result.put("email", user.getEmail());
+				result.put("punNumber", user.getPunNumber());
+				result.put("signUpDate", user.getSignUpDate());
+				result.put("loginID", user.getLoginID());
+				// 비밀번호 테스트 상 출력
+				result.put("loginPassword", user.getLoginPassword());
+			}
+		}
 
-    /** 추가: 사용자 정보 수정용 PUT 엔드포인트 **/
-    @PutMapping("/userinfo")
-    public ResponseEntity<?> updateUserinfo(@RequestBody UpdateUserDto dto,
-                                            Authentication auth) {
-        // 인증 여부 확인
-        if (auth == null
-            || !auth.isAuthenticated()
-            || auth instanceof AnonymousAuthenticationToken) {
-            return ResponseEntity.status(401).build();
-        }
+		return ResponseEntity.ok(result);
+	}
 
-        // 현재 로그인된 ID로 사용자 조회
-        String loginID = auth.getName();
-        HotelUser user = hoteluserRepository.findByLoginID(loginID)
-            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+	/** 추가: 클라이언트가 보낼 JSON 바인딩용 DTO **/
+	public static class UpdateUserDto {
+		public String name;
+		public String email;
+		public String punNumber;
+		public String loginPassword;
+	}
 
-        // 수정 가능한 필드만 업데이트
-        user.setName(dto.name);
-        user.setEmail(dto.email);
-        user.setPunNumber(dto.punNumber);
+	/** 추가: 사용자 정보 수정용 PUT 엔드포인트 **/
+	@PutMapping("/userinfo")
+	public ResponseEntity<?> updateUserinfo(@RequestBody UpdateUserDto dto, Authentication auth) {
+		// 인증 여부 확인
+		if (auth == null || !auth.isAuthenticated() || auth instanceof AnonymousAuthenticationToken) {
+			return ResponseEntity.status(401).build();
+		}
 
-        // 비밀번호는 빈 문자열이 아닐 때만 변경
-        if (dto.loginPassword != null && !dto.loginPassword.isBlank()) {
-            user.setLoginPassword(passwordEncoder.encode(dto.loginPassword));
-        }
+		// 현재 로그인된 ID로 사용자 조회
+		String loginID = auth.getName();
+		HotelUser user = hoteluserRepository.findByLoginID(loginID)
+				.orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-        hoteluserRepository.save(user);
+		// 수정 가능한 필드만 업데이트
+		user.setName(dto.name);
+		user.setEmail(dto.email);
+		user.setPunNumber(dto.punNumber);
 
-        Map<String,String> resp = new HashMap<>();
-        resp.put("status", "success");
-        return ResponseEntity.ok(resp);
-    }
-    
-    
- // 아이디 중복 체크용
-    @GetMapping("/check-id")
-    public ResponseEntity<?> checkID(@RequestParam String loginID) {
-        boolean exists = hoteluserRepository.findByLoginID(loginID).isPresent();
-        return ResponseEntity.ok(Map.of("available", !exists));
-    }
-    
-    
-    
+		// 비밀번호는 빈 문자열이 아닐 때만 변경
+		if (dto.loginPassword != null && !dto.loginPassword.isBlank()) {
+			user.setLoginPassword(passwordEncoder.encode(dto.loginPassword));
+		}
+
+		hoteluserRepository.save(user);
+
+		Map<String, String> resp = new HashMap<>();
+		resp.put("status", "success");
+		return ResponseEntity.ok(resp);
+	}
+
+	// 아이디 중복 체크용
+	@GetMapping("/check-id")
+	public ResponseEntity<?> checkID(@RequestParam String loginID) {
+		boolean exists = hoteluserRepository.findByLoginID(loginID).isPresent();
+		return ResponseEntity.ok(Map.of("available", !exists));
+	}
+
 }

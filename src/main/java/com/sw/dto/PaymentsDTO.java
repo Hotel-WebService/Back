@@ -10,8 +10,8 @@ import lombok.Getter;
 public class PaymentsDTO {
 	private Long paymentID;
 	private Long reservationID;
-	private Long hotelID; 
-    private Long roomID; 
+	private Long hotelID;
+	private Long roomID;
 	private String hotelName;
 	private String roomName;
 	private BigDecimal amount;
@@ -19,14 +19,15 @@ public class PaymentsDTO {
 	private String payment_status;
 	private LocalDateTime pay_date;
 	private LocalDate check_in_date;
-    private LocalDate check_out_date;
+	private LocalDate check_out_date;
 
-	public PaymentsDTO(Long paymentID, Long reservationID, Long hotelID, Long roomID, String hotelName, String roomName, BigDecimal amount, String payment_method,
-			String payment_status, LocalDateTime pay_date, LocalDate check_in_date, LocalDate check_out_date) {
+	public PaymentsDTO(Long paymentID, Long reservationID, Long hotelID, Long roomID, String hotelName, String roomName,
+			BigDecimal amount, String payment_method, String payment_status, LocalDateTime pay_date,
+			LocalDate check_in_date, LocalDate check_out_date) {
 		this.paymentID = paymentID;
 		this.reservationID = reservationID;
 		this.hotelID = hotelID;
-        this.roomID = roomID;
+		this.roomID = roomID;
 		this.hotelName = hotelName;
 		this.roomName = roomName;
 		this.amount = amount;

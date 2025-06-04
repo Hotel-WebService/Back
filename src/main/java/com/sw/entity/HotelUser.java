@@ -21,30 +21,29 @@ import lombok.Setter;
 @Table(name = "userTable", schema = "hoteldb")
 public class HotelUser {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userID;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long userID;
 
-    @Column(nullable = false, length = 45)
-    private String name;
+	@Column(nullable = false, length = 45)
+	private String name;
 
-    @Column
-    private LocalDate birthday;
-    
-    @Column(unique=true, nullable = false, length = 50)
-    private String email;
+	@Column
+	private LocalDate birthday;
 
-    @Column(nullable = false, length = 45)
-    private String punNumber;
+	@Column(unique = true, nullable = false, length = 50)
+	private String email;
 
-    @Column
-    private LocalDateTime signUpDate;
+	@Column(nullable = false, length = 45)
+	private String punNumber;
 
-    @Column(unique=true, nullable = false, length = 45)
-    private String loginID;
+	@Column
+	private LocalDateTime signUpDate;
 
-    @Column(nullable = false, length = 255)
-    private String loginPassword;
+	@Column(unique = true, nullable = false, length = 45)
+	private String loginID;
 
- 
+	@Column(nullable = false, length = 255)
+	private String loginPassword;
+
 }

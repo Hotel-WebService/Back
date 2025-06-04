@@ -21,24 +21,24 @@ import com.sw.service.PaymentsService;
 @CrossOrigin(origins = "*")
 public class PaymentsTableController {
 
-    private final PaymentsService paymentsService;
-    
-    public PaymentsTableController(PaymentsService paymentsService) {
-        this.paymentsService = paymentsService;
-    }
+	private final PaymentsService paymentsService;
 
-    @PostMapping
-    public Payments createPayment(@RequestBody Payments payments) {
-        payments.setPay_date(LocalDateTime.now());
-        return paymentsService.save(payments);
-    }
-    
-    @GetMapping("/user/{userId}")
-    public List<Payments> getPaymentsByUserID(@PathVariable Long userId) {
-        return paymentsService.findByUserID(userId);
-    }
+	public PaymentsTableController(PaymentsService paymentsService) {
+		this.paymentsService = paymentsService;
+	}
 
-    @GetMapping("/user/{userId}/details")
+	@PostMapping
+	public Payments createPayment(@RequestBody Payments payments) {
+		payments.setPay_date(LocalDateTime.now());
+		return paymentsService.save(payments);
+	}
+
+	@GetMapping("/user/{userId}")
+	public List<Payments> getPaymentsByUserID(@PathVariable Long userId) {
+		return paymentsService.findByUserID(userId);
+	}
+
+	@GetMapping("/user/{userId}/details")
 	public List<PaymentsDTO> getUserPaymentDetails(@PathVariable Long userId) {
 		return paymentsService.getPaymentDetailsByUserId(userId);
 	}

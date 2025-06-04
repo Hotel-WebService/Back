@@ -17,18 +17,16 @@ import com.sw.service.HotelUserService;
 @RequestMapping("/api/users")
 public class HotelUserApiController {
 
-	 private final HotelUserService hotelUserService;
+	private final HotelUserService hotelUserService;
 
-	    public HotelUserApiController(HotelUserService hotelUserService) {
-	        this.hotelUserService = hotelUserService;
-	    }
+	public HotelUserApiController(HotelUserService hotelUserService) {
+		this.hotelUserService = hotelUserService;
+	}
 
-	    @PostMapping("/signup")
-	    public ResponseEntity<HotelUser> signUp(@RequestBody UserDto userDto) {
-	        HotelUser saved = hotelUserService.register(userDto);
-	        return new ResponseEntity<>(saved, HttpStatus.CREATED);
-	    }
-    
-    
-  
+	@PostMapping("/signup")
+	public ResponseEntity<HotelUser> signUp(@RequestBody UserDto userDto) {
+		HotelUser saved = hotelUserService.register(userDto);
+		return new ResponseEntity<>(saved, HttpStatus.CREATED);
+	}
+
 }

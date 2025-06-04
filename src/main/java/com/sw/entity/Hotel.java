@@ -12,67 +12,59 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Entity
 @Getter
 @Setter
 @Table(name = "hoteltable")
 public class Hotel {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "hotelID")
-    private Long hotelID;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "hotelID")
+	private Long hotelID;
 
-    @Column(name = "hotelName", nullable = false, length = 200)
-    private String hotelName;
+	@Column(name = "hotelName", nullable = false, length = 200)
+	private String hotelName;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
+	@Column(name = "description", columnDefinition = "TEXT")
+	private String description;
 
-    @Column(name = "zip_code")
-    private String zipCode;
+	@Column(name = "zip_code")
+	private String zipCode;
 
-    @Column(name = "address", length = 300)
-    private String address;
+	@Column(name = "address", length = 300)
+	private String address;
 
-    @Column(name = "city", length = 100)
-    private String city;
+	@Column(name = "city", length = 100)
+	private String city;
 
-    @Column(name = "district", length = 100)
-    private String district;
+	@Column(name = "district", length = 100)
+	private String district;
 
-    @Column(name = "latitude", precision = 12, scale = 10)
-    private BigDecimal latitude;
+	@Column(name = "latitude", precision = 12, scale = 10)
+	private BigDecimal latitude;
 
-    @Column(name = "longitude", precision = 13, scale = 10)
-    private BigDecimal longitude;
+	@Column(name = "longitude", precision = 13, scale = 10)
+	private BigDecimal longitude;
 
-    @Column(name = "hotelnumber", length = 50)
-    private String hotelnumber;
+	@Column(name = "hotelnumber", length = 50)
+	private String hotelnumber;
 
-    @Column(name = "rooms_count")
-    private Integer roomsCount;
+	@Column(name = "rooms_count")
+	private Integer roomsCount;
 
-    @Column(name = "parking_lot", nullable = false)
-    private Boolean parkingLot;
-/*
-    @Column(name = "check_in")
-    private LocalDate checkIn;
+	@Column(name = "parking_lot", nullable = false)
+	private Boolean parkingLot;
 
-    @Column(name = "check_out")
-    private LocalDate checkOut;
-*/
-    
-    @Column(name = "check_in", columnDefinition = "TIME")
-    private LocalTime checkIn;
+	@Column(name = "check_in", columnDefinition = "TIME")
+	private LocalTime checkIn;
 
-    @Column(name = "check_out", columnDefinition = "TIME")
-    private LocalTime checkOut;
-    
-    @Column(name = "star")
-    private String star;
-    
-    public Hotel() {
-    }
+	@Column(name = "check_out", columnDefinition = "TIME")
+	private LocalTime checkOut;
+
+	@Column(name = "star")
+	private String star;
+
+	public Hotel() {
+	}
 }

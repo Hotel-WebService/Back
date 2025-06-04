@@ -16,19 +16,19 @@ import lombok.Setter;
 @Setter
 @Table(name = "reviewtable")
 public class ReviewTable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewID;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long reviewID;
 
-    private Long hotelID;
-    private Long userID;
-    private Long reservationID;
-    private Integer rating;
+	private Long hotelID;
+	private Long userID;
+	private Long reservationID;
+	private Integer rating;
 
-    @Column(columnDefinition = "TEXT")
-    private String comment;
+	@Column(columnDefinition = "TEXT")
+	private String comment;
 
-    private LocalDateTime commentDate;
+	private LocalDateTime commentDate;
 
-    // Getter/Setter
+	// Getter/Setter
 }

@@ -10,14 +10,14 @@ import com.sw.repository.HotelRepository;
 @Service
 public class HotelService {
 
-    private final HotelRepository hotelRepository;
+	private final HotelRepository hotelRepository;
 
-    public HotelService(HotelRepository hotelRepository) {
-        this.hotelRepository = hotelRepository;
-    }
+	public HotelService(HotelRepository hotelRepository) {
+		this.hotelRepository = hotelRepository;
+	}
 
-    public List<Hotel> findAll() {
-        return hotelRepository.findAll();
-    }
+	public List<Hotel> findAll() {
+		return hotelRepository.findAll();
+	}
 
 }

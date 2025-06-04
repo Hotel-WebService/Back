@@ -16,28 +16,29 @@ import lombok.Setter;
 @Setter
 @Table(name = "user_likes")
 public class UserLike {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "likeID")
-    private Long likeID;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "likeID")
+	private Long likeID;
 
-    @Column(name = "userID", nullable = false)
-    private Long userID;
+	@Column(name = "userID", nullable = false)
+	private Long userID;
 
-    @Column(name = "hotelID", nullable = false)
-    private Long hotelID;
+	@Column(name = "hotelID", nullable = false)
+	private Long hotelID;
 
-    @Column(name = "likedat")
-    private LocalDateTime likedat;
+	@Column(name = "likedat")
+	private LocalDateTime likedat;
 
-    // 기본 생성자
-    public UserLike() {}
+	// 기본 생성자
+	public UserLike() {
+	}
 
-    public UserLike(Long userID, Long hotelID) {
-        this.userID = userID;
-        this.hotelID = hotelID;
-        this.likedat = LocalDateTime.now();
-    }
+	public UserLike(Long userID, Long hotelID) {
+		this.userID = userID;
+		this.hotelID = hotelID;
+		this.likedat = LocalDateTime.now();
+	}
 
-    // Getter/Setter
+	// Getter/Setter
 }

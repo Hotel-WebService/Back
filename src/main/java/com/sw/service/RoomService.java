@@ -8,18 +8,18 @@ import java.util.List;
 
 @Service
 public class RoomService {
-    private final RoomRepository roomRepository;
+	private final RoomRepository roomRepository;
 
-    public RoomService(RoomRepository roomRepository) {
-        this.roomRepository = roomRepository;
-    }
+	public RoomService(RoomRepository roomRepository) {
+		this.roomRepository = roomRepository;
+	}
 
-    public List<Room> getAllRooms() {
-        return roomRepository.findAll();
-    }
+	public List<Room> getAllRooms() {
+		return roomRepository.findAll();
+	}
 
-    // 호텔별 조회 필요하면 추가
-    public List<Room> getRoomsByHotel(Long hotelId) {
-         return roomRepository.findByHotelID(hotelId);
-    }
+	// 호텔별 조회 필요하면 추가
+	public List<Room> getRoomsByHotel(Long hotelId) {
+		return roomRepository.findByHotelID(hotelId);
+	}
 }

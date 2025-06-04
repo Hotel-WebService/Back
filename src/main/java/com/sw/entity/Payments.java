@@ -14,14 +14,14 @@ import lombok.Data;
 @Table(name = "paymentstable")
 @Data
 public class Payments {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long paymentID;
-    private Long userID;
-    private Long reservationID;
-    private BigDecimal amount;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long paymentID;
+	private Long userID;
+	private Long reservationID;
+	private BigDecimal amount;
 
-    private String payment_method;
-    private String payment_status;
-    private LocalDateTime pay_date;
+	private String payment_method;
+	private String payment_status;
+	private LocalDateTime pay_date;
 }
