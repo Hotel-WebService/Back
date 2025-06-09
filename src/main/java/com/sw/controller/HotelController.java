@@ -72,4 +72,15 @@ public class HotelController {
 		m.put("star", h.getStar());
 		return m;
 	}
+	
+	@GetMapping("/filter")
+    public ResponseEntity<List<Map<String, Object>>> getHotelsByCityDistrict(
+            @RequestParam String city,
+            @RequestParam String district
+    ) {
+        List<Map<String, Object>> list = hotelRepository.findByCityAndDistrict(city, district)
+                .stream().map(this::toMap).collect(Collectors.toList());
+        return ResponseEntity.ok(list);
+    }
+	
 }
