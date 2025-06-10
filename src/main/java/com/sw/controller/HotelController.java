@@ -70,17 +70,46 @@ public class HotelController {
 		m.put("check_in", h.getCheckIn());
 		m.put("check_out", h.getCheckOut());
 		m.put("star", h.getStar());
+		m.put("facilities", h.getFacilities());
 		return m;
 	}
 	
+
 	@GetMapping("/filter")
-    public ResponseEntity<List<Map<String, Object>>> getHotelsByCityDistrict(
-            @RequestParam String city,
-            @RequestParam String district
-    ) {
-        List<Map<String, Object>> list = hotelRepository.findByCityAndDistrict(city, district)
-                .stream().map(this::toMap).collect(Collectors.toList());
-        return ResponseEntity.ok(list);
-    }
+	public ResponseEntity<List<Map<String, Object>>> getHotelsByCityDistrict(
+	        @RequestParam String city,
+	        @RequestParam String district,
+	        @RequestParam(required = false) String star,
+	        @RequestParam(required = false) Integer parking_lot,
+	        @RequestParam(required = false) Integer capacity,
+	        @RequestParam(required = false) Integer minPrice,
+	        @RequestParam(required = false) Integer maxPrice,
+	        @RequestParam(required = false) String check_in
+	) {
+	    // 콘솔 확인용 로그
+	    System.out.println("필터 파라미터 - city: " + city + ", district: " + district
+	            + ", star: " + star
+	            + ", parking_lot: " + parking_lot
+	            + ", capacity: " + capacity
+	            + ", minPrice: " + minPrice
+	            + ", maxPrice: " + maxPrice
+	            + ", check_in: " + check_in);
+
+	    // 1: 주차 가능, 0: 주차 불가, null: 무관
+	    Boolean parkingLot = parking_lot == null ? null : parking_lot == 1;
+
+	    List<Hotel> hotels = hotelRepository.filterHotels(
+	            city,
+	            district,
+	            star,
+	            parkingLot,
+	            capacity,
+	            minPrice,
+	            maxPrice
+	    );
+	    List<Map<String, Object>> list = hotels.stream().map(this::toMap).collect(Collectors.toList());
+	    return ResponseEntity.ok(list);
+	}
+	
 	
 }

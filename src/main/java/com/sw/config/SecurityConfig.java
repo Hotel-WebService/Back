@@ -1,10 +1,12 @@
 package com.sw.config;
 
 import java.util.List;
-import org.springframework.security.config.Customizer;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,6 +29,12 @@ public class SecurityConfig {
 	public SecurityConfig(CustomUserDetailsService uds) {
 		this.userDetailsService = uds;
 	}
+	
+	@Autowired
+	private LoginSuccessHandler successHandler;
+	
+	@Autowired
+	private LoginFailureHandler failureHandler;
 
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider() {
@@ -56,15 +64,20 @@ public class SecurityConfig {
 				)
 
 				// 2) 폼 로그인
-				.formLogin(form -> form.loginPage("/login") // GET /login → 로그인 폼
+				.formLogin(form -> form
+						.loginPage("/login") // GET /login → 로그인 폼
 						.loginProcessingUrl("/login") // POST /login → 스프링 시큐리티가 처리
-						.defaultSuccessUrl("/", true) // .defaultSuccessUrl("/firstpage", true)
-						.failureUrl("/login?error").usernameParameter("loginID").passwordParameter("loginPassword")
+						.usernameParameter("loginID")       
+						.passwordParameter("loginPassword")
+						.successHandler(successHandler) // .defaultSuccessUrl("/firstpage", true)
+						.failureHandler(failureHandler)
 						.permitAll())
 
 				// 3) 로그아웃
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
-						.permitAll());
+						.permitAll())
+		
+				.authenticationProvider(authenticationProvider());
 
 		return http.build();
 	}
