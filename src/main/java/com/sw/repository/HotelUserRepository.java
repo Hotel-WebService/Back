@@ -10,3 +10,4 @@ public interface HotelUserRepository extends JpaRepository<HotelUser, Long> {
 
 	Optional<HotelUser> findByName(String name);
 }
+ 

@@ -15,3 +15,4 @@ public class HotelRoomDTO {
     private Integer capacity;
     // 기타 필요 필드 추가 가능
 }
+ 

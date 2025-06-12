@@ -41,7 +41,7 @@ public class ConsultingAnswerController {
         consultingAnswerRepository.save(answer);
         
     }
-*/
+*/ 
     @PostMapping("/save")
     public String saveConsultingAnswer(@RequestBody ConsultingAnswerRequest req) {
     	 System.out.println(">>> DTO 값: " + req);

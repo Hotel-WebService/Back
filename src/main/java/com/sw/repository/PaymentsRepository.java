@@ -37,3 +37,4 @@ public interface PaymentsRepository extends JpaRepository<Payments, Long> {
 			""")
 	List<PaymentsDTO> findPaymentDetailsByUserId(@Param("userId") Long userId);
 }
+ 

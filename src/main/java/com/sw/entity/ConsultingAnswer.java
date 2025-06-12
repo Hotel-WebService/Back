@@ -35,3 +35,4 @@ public class ConsultingAnswer {
     @Column(name = "answer_time", insertable = false, updatable = false)
     private Timestamp answer_time;
 }
+ 

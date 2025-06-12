@@ -29,7 +29,7 @@ public class HotelController {
 	public HotelController(HotelRepository hotelRepository) {
 		this.hotelRepository = hotelRepository;
 	}
-
+ 
 	/** 전체 호텔 리스트 조회 → GET /api/hotels */
 	@GetMapping
 	public ResponseEntity<List<Map<String, Object>>> getAllHotels() {

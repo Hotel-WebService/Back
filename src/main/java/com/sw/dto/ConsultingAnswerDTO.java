@@ -16,3 +16,4 @@ public class ConsultingAnswerDTO {
     private String mood;
     private String special;
 }
+ 

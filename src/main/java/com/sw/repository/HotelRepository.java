@@ -17,7 +17,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
     Optional<Hotel> findByHotelName(String hotelName);
     List<Hotel> findByCityAndDistrict(String city, String district);
 
-    // 연관관계 선언 없이 JOIN hotelID 수동 사용
+    // 연관관계 선언 없이 JOIN hotelID 수동 사용 
     @Query("""
         SELECT new com.sw.dto.HotelRoomDTO(
             h.hotelID, h.hotelName, h.star, h.district, h.city, h.parkingLot,

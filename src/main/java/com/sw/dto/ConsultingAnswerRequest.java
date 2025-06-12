@@ -17,3 +17,4 @@ public class ConsultingAnswerRequest {
     private String mood;
     private String special;
 }
+ 
