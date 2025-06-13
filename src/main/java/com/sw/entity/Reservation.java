@@ -32,6 +32,6 @@ public class Reservation {
 	private LocalDateTime reservationDate;
 
 	public enum Status {
-		예약완료, 예약취소
+		Y, N
 	}
 }

@@ -48,7 +48,7 @@ public class ReservationController {
 
 	@PostMapping
 	public Reservation createReservation(@RequestBody Reservation reservation) {
-		reservation.setStatus(Reservation.Status.예약완료);
+		reservation.setStatus(Reservation.Status.Y);
 		reservation.setReservationDate(LocalDateTime.now());
 		return reservationService.save(reservation);
 	}
@@ -77,17 +77,18 @@ public class ReservationController {
 		Reservation reservation = reservationService.findById(reservationID);
 		if (reservation != null) {
 			// 2) 예약 상태를 취소로 변경(혹은 실제 삭제)
-			reservation.setStatus(Reservation.Status.예약취소);
+			reservation.setStatus(Reservation.Status.N);
 			reservationService.save(reservation);
 
 			// 3) 객실 재고 복구
 			roomQuantityService.cancelRoomReserve(reservation.getRoomID(), reservation.getCheck_in_date(), 1);
 
-			// 4) 해당 예약과 연결된 결제 row 삭제
-			paymentsService.deleteByReservationId(reservationID);
+			// 4) 해당 예약과 연결된 결제 row 업데이트
+			paymentsService.updateStatusToNByReservationId(reservationID);
+		//	paymentsService.deleteByReservationId(reservationID);
 
 			// 5) 필요시 예약 row 자체도 삭제하고 싶다면 아래 코드 사용
-			reservationService.deleteById(reservationID);
+		//	reservationService.deleteById(reservationID);
 		}
 	}
 

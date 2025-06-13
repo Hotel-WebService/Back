@@ -73,9 +73,16 @@ public class PaymentsService {
 			// 필요 시 예외처리 throw new RuntimeException 등
 		}
 	}
-
+/* 결제 삭제 코드
 	@Transactional
 	public void deleteByReservationId(Long reservationId) {
 		paymentsRepository.deleteByReservationID(reservationId);
+	}
+	*/
+	
+	// 결제 업데이트 코드
+	@Transactional
+	public void updateStatusToNByReservationId(Long reservationId) {
+	    paymentsRepository.updateStatusToNByReservationID(reservationId);
 	}
 }

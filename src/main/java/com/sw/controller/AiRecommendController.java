@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+// 현재 테스트 코드 CHATGPT 미연동
 @RestController
 @RequestMapping("/api/hotels") 
 public class AiRecommendController {
@@ -23,7 +24,7 @@ public class AiRecommendController {
 }
  
  
-/*
+/* 아래 주석 코드 실제 CHATGPT 연동코드
 package com.sw.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;

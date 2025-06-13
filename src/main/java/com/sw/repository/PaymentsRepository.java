@@ -3,11 +3,13 @@ package com.sw.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.sw.entity.Payments;
 import com.sw.dto.PaymentsDTO;
+import com.sw.entity.Payments;
 
 public interface PaymentsRepository extends JpaRepository<Payments, Long> {
 	List<Payments> findByUserID(Long userID);
@@ -36,5 +38,11 @@ public interface PaymentsRepository extends JpaRepository<Payments, Long> {
 			WHERE p.userID = :userId
 			""")
 	List<PaymentsDTO> findPaymentDetailsByUserId(@Param("userId") Long userId);
+	
+	// 💡 결제상태를 'N'으로 변경하는 update 쿼리 추가
+    @Modifying
+    @Transactional
+    @Query("UPDATE Payments p SET p.payment_status = 'N' WHERE p.reservationID = :reservationId")
+    void updateStatusToNByReservationID(@Param("reservationId") Long reservationId);
 }
  
