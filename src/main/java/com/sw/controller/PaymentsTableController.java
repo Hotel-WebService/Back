@@ -29,6 +29,7 @@ public class PaymentsTableController {
 
 	@PostMapping
 	public Payments createPayment(@RequestBody Payments payments) {
+		System.out.println("받은 impUid: " + payments.getImpUid());
 		payments.setPay_date(LocalDateTime.now());
 		return paymentsService.save(payments);
 	}

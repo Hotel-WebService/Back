@@ -1,5 +1,7 @@
 package com.sw.service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -27,4 +29,9 @@ public class ReservationService {
 		Optional<Reservation> opt = reservationRepository.findById(reservationID);
 		return opt.orElse(null); // 없으면 null 반환
 	}
+	
+	// 체크아웃 확인
+	public List<Reservation> findByCheckOutDateAndStatus(LocalDate checkOutDate, Reservation.Status status) {
+        return reservationRepository.findByCheckOutDateAndStatus(checkOutDate, status);
+    }
 }

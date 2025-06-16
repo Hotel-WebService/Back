@@ -3,6 +3,7 @@ package com.sw.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,4 +25,7 @@ public class Payments {
 	private String payment_method;
 	private String payment_status;
 	private LocalDateTime pay_date;
+	
+	@Column(name = "imp_uid")
+	private String impUid;
 }

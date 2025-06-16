@@ -29,7 +29,8 @@ public interface PaymentsRepository extends JpaRepository<Payments, Long> {
 			  p.payment_status,
 			  p.pay_date,
 			  rsv.check_in_date,
-			  rsv.check_out_date
+			  rsv.check_out_date,
+			  p.impUid
 			)
 			FROM Payments p
 			JOIN Reservation rsv ON p.reservationID = rsv.reservationID

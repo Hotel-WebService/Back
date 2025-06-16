@@ -71,4 +71,18 @@ public class RoomQuantityService {
     }
     
     
+    /**
+     * 체크아웃 후 빈방 복구 (reserved_count -1, available_count +1)
+     */
+    public boolean restoreRoomAfterCheckout(Long roomID, LocalDate date, int count) {
+        return roomQuantityRepository.findByIdRoomIDAndIdDate(roomID, date)
+            .map(rq -> {
+                rq.setReservedCount(Math.max(0, rq.getReservedCount() - count));
+                rq.setAvailableCount(rq.getAvailableCount() + count);
+                roomQuantityRepository.save(rq);
+                return true;
+            }).orElse(false);
+    }
+    
+    
 }

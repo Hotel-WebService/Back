@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 
 @Getter
@@ -20,10 +22,12 @@ public class PaymentsDTO {
 	private LocalDateTime pay_date;
 	private LocalDate check_in_date;
 	private LocalDate check_out_date;
+	@JsonProperty("imp_uid")
+	private String impUid;
 
 	public PaymentsDTO(Long paymentID, Long reservationID, Long hotelID, Long roomID, String hotelName, String roomName,
 			BigDecimal amount, String payment_method, String payment_status, LocalDateTime pay_date,
-			LocalDate check_in_date, LocalDate check_out_date) {
+			LocalDate check_in_date, LocalDate check_out_date, String impUid) {
 		this.paymentID = paymentID;
 		this.reservationID = reservationID;
 		this.hotelID = hotelID;
@@ -36,5 +40,6 @@ public class PaymentsDTO {
 		this.pay_date = pay_date;
 		this.check_in_date = check_in_date;
 		this.check_out_date = check_out_date;
+		this.impUid = impUid;
 	}
 }
