@@ -1,3 +1,4 @@
+/*
 package com.sw.controller;
 
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class AiRecommendController {
         return ResponseEntity.ok(result);
     }
 }
- 
+*/ 
  
 /* 아래 주석 코드 실제 CHATGPT 연동코드
 package com.sw.controller;
@@ -64,3 +65,26 @@ public class AiRecommendController {
 }
 
 */
+
+
+package com.sw.controller;
+
+import com.sw.dto.AiRecommendRequest;
+import com.sw.service.AiRecommendService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/hotels")
+public class AiRecommendController {
+
+    @Autowired
+    private AiRecommendService aiRecommendService; // ✅ 서비스 주입
+
+    @PostMapping("/ai-recommend")
+    public ResponseEntity<?> recommendByAI(@RequestBody AiRecommendRequest request) {
+        // ✅ 서비스 메서드 호출하여 응답 그대로 반환
+        return ResponseEntity.ok(aiRecommendService.getAiRecommendation(request));
+    }
+}

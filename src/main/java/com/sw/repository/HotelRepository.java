@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.sw.dto.HotelCandidateDto;
 import com.sw.dto.HotelRoomDTO;
 import com.sw.entity.Hotel;
 
@@ -65,4 +66,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
         @Param("minPrice") Integer minPrice,
         @Param("maxPrice") Integer maxPrice
     );
+    
+    List<Hotel> findByDistrict(String district);
+    
 }

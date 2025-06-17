@@ -12,6 +12,7 @@ public class AiRecommendRequest {
     public String theme;
     public String mood;
     public String special;
+    public String district;
 }
 
 
