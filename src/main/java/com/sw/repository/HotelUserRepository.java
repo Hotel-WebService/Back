@@ -9,5 +9,9 @@ public interface HotelUserRepository extends JpaRepository<HotelUser, Long> {
 	Optional<HotelUser> findByLoginID(String loginID);
 
 	Optional<HotelUser> findByName(String name);
+	
+	Optional<HotelUser> findByNameAndPunNumber(String name, String punNumber);
+	
+	Optional<HotelUser> findByLoginIDAndPunNumber(String loginID, String punNumber);
 }
  

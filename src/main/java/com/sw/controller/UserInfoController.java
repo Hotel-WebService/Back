@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sw.entity.HotelUser;
 import com.sw.repository.HotelUserRepository;
+import com.sw.service.SMSService;
 
 @RestController
 @RequestMapping("/api")
@@ -28,13 +31,17 @@ public class UserInfoController {
 
 	private final HotelUserRepository hoteluserRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final Map<String, String> smsStore = new ConcurrentHashMap<>();
 
 	@Autowired
 	public UserInfoController(HotelUserRepository hoteluserRepository, PasswordEncoder passwordEncoder) {
 		this.hoteluserRepository = hoteluserRepository;
 		this.passwordEncoder = passwordEncoder;
 	}
-
+	
+	@Autowired
+	private SMSService smsService;
+	
 	/** -------------------- 회원가입(Signup) 추가 -------------------- **/
 	public static class SignupDto {
 		public String name;
@@ -58,7 +65,7 @@ public class UserInfoController {
 		user.setName(dto.name);
 		user.setLoginID(dto.loginID);
 		user.setLoginPassword(passwordEncoder.encode(dto.loginPassword));
-		user.setPunNumber(dto.punNumber);
+		user.setPunNumber(dto.punNumber.replaceAll("-", ""));
 		user.setEmail(dto.email);
 		user.setBirthday(LocalDate.parse(dto.birthday));
 		user.setSignUpDate(LocalDateTime.now());
@@ -139,6 +146,56 @@ public class UserInfoController {
 	public ResponseEntity<?> checkID(@RequestParam String loginID) {
 		boolean exists = hoteluserRepository.findByLoginID(loginID).isPresent();
 		return ResponseEntity.ok(Map.of("available", !exists));
+	}
+	
+	@GetMapping("/find-id-by-phone")
+	public ResponseEntity<String> findLoginIdByPhone(@RequestParam String name, @RequestParam String phone) {
+	    Optional<HotelUser> user = hoteluserRepository.findByNameAndPunNumber(name, phone);
+	    return user.map(value -> ResponseEntity.ok(value.getLoginID()))
+	               .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 사용자가 없습니다."));
+	}
+	
+	@GetMapping("/find-password")
+	public ResponseEntity<?> verifyUserForPasswordReset(@RequestParam String loginID, @RequestParam String phone) {
+	    Optional<HotelUser> user = hoteluserRepository.findByLoginIDAndPunNumber(loginID, phone);
+	    return user.isPresent()
+	        ? ResponseEntity.ok().build()
+	        : ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 사용자가 없습니다.");
+	}
+	
+	@PutMapping("/reset-password")
+	public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> body) {
+	    String loginID = body.get("loginID");
+	    String newPassword = body.get("newPassword");
+
+	    Optional<HotelUser> userOpt = hoteluserRepository.findByLoginID(loginID);
+	    if (userOpt.isPresent()) {
+	        HotelUser user = userOpt.get();
+	        user.setLoginPassword(passwordEncoder.encode(newPassword));
+	        hoteluserRepository.save(user);
+	        return ResponseEntity.ok(Map.of("status", "비밀번호 변경 완료"));
+	    }
+	    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자 없음");
+	}
+
+	@PostMapping("/auth/request-sms")
+	public ResponseEntity<?> sendSms(@RequestBody Map<String, String> body) {
+	    String phoneNumber = body.get("phoneNumber");
+	    String code = smsService.sendVerificationCode(phoneNumber);
+	    smsStore.put(phoneNumber, code);
+	    return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/auth/verify-sms")
+	public ResponseEntity<?> verifySms(@RequestBody Map<String, String> body) {
+	    String phoneNumber = body.get("phoneNumber");
+	    String inputCode = body.get("code");
+	    String storedCode = smsStore.get(phoneNumber);
+	    if (storedCode != null && storedCode.equals(inputCode)) {
+	        return ResponseEntity.ok().build();
+	    } else {
+	        return ResponseEntity.status(401).body("인증 실패");
+	    }
 	}
 
 }

@@ -71,6 +71,7 @@ public class HotelController {
 		m.put("check_out", h.getCheckOut());
 		m.put("star", h.getStar());
 		m.put("facilities", h.getFacilities());
+		m.put("price_policy", h.getPricePolicy());
 		return m;
 	}
 	

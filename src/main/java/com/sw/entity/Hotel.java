@@ -71,6 +71,9 @@ public class Hotel {
 	@Column(name = "facilities", length = 255)
 	private String facilities;
 	
+	@Column(name = "price_policy", columnDefinition = "TEXT")
+    private String pricePolicy;
+	
 	public Hotel() {
 	}
 }
